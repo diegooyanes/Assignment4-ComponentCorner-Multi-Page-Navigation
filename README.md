@@ -1,6 +1,6 @@
 # Tomate un Mate
 
-Tomate un Mate is a React storefront for premium yerba mate products and accessories. The project demonstrates reusable components, props, data flow, and component-specific CSS.
+Tomate un Mate is a React storefront for premium yerba mate products and accessories. It uses React Router to show several pages within one single-page application.
 
 ## Features
 
@@ -8,9 +8,19 @@ Tomate un Mate is a React storefront for premium yerba mate products and accesso
 - Reusable React components
 - Dynamic product cards generated from an array
 - Component data passed through props
+- Home, products, product details, and cart routes
+- Product details selected through a URL parameter
 - Shopping cart with an item count, removal controls, and a calculated total
+- Cart contents saved in browser `localStorage` across navigation and refreshes
 - Accessible and semantic HTML structure
-- Individual CSS file for each component
+- Component and page-specific CSS
+
+## Routes
+
+- `/` — home page
+- `/products` — product catalog
+- `/products/:productId` — details for an individual product
+- `/cart` — shopping cart
 
 ## Components
 
@@ -18,7 +28,8 @@ Tomate un Mate is a React storefront for premium yerba mate products and accesso
 - `Hero`: presents the main message and call to action
 - `ProductCard`: displays reusable product information
 - `CartItem`: displays an item in the cart with a remove button
-- `Footer`: displays contact information and store links
+- `Footer`: displays contact information and links to store pages
+- `HomePage`, `ProductsPage`, `ProductDetailsPage`, and `CartPage`: render the four store views
 
 ## Product photos
 
@@ -31,6 +42,7 @@ The product photos are illustrative images from Unsplash:
 ## Technologies
 
 - React
+- React Router
 - Vite
 - JavaScript
 - CSS

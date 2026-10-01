@@ -1,10 +1,12 @@
 import "./App.css";
+import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Hero from "./components/Hero";
-import ProductCard from "./components/ProductCard";
 import Footer from "./components/Footer";
-import { useState } from "react";
-import CartItem from "./components/CartItem";
+import HomePage from "./pages/HomePage";
+import ProductsPage from "./pages/ProductsPage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   const products = [
@@ -34,7 +36,23 @@ function App() {
     },
   ];
 
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem("tomate-un-mate-cart");
+      const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+      return Array.isArray(parsedCart) ? parsedCart : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("tomate-un-mate-cart", JSON.stringify(cartItems));
+    } catch (error) {
+      console.warn("Could not save cart to localStorage:", error);
+    }
+  }, [cartItems]);
 
   function addToCart(product) {
     setCartItems((currentItems) => [
@@ -49,85 +67,45 @@ function App() {
     );
   }
 
-  const cartTotal = cartItems.reduce(
-    (total, item) => total + item.price,
-    0
-  );
-
   return (
-    <div className="app">
-      <Header storeName="Tomate un Mate" cartCount={cartItems.length} />
+    <BrowserRouter>
+      <div className="app">
+        <Header storeName="Tomate un Mate" cartCount={cartItems.length} />
 
-      <main>
-        <Hero
-          title="Make every sip a ritual"
-          subtitle="Discover premium mate essentials selected for flavor, tradition, and everyday moments."
-          ctaText="Explore the collection"
+        <main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/products"
+              element={
+                <ProductsPage products={products} addToCart={addToCart} />
+              }
+            />
+            <Route
+              path="/products/:productId"
+              element={
+                <ProductDetailsPage products={products} addToCart={addToCart} />
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <CartPage
+                  cartItems={cartItems}
+                  removeFromCart={removeFromCart}
+                />
+              }
+            />
+          </Routes>
+        </main>
+
+        <Footer
+          storeName="Tomate un Mate"
+          email="hello@tomateunmate.com"
+          year={2026}
         />
-
-        <section className="products-section" id="products">
-          <div className="section-heading">
-            <p>Our favorites</p>
-            <h2>Build your perfect mate setup</h2>
-            <span>
-              Thoughtfully selected essentials for beginners and lifelong mate
-              drinkers.
-            </span>
-          </div>
-
-          <div className="product-grid">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                name={product.name}
-                price={product.price}
-                image={product.image}
-                description={product.description}
-                onAddToCart={addToCart}
-              />
-            ))}
-          </div>
-        </section>
-
-        <section className="cart-section" id="cart">
-          <h2>Your cart</h2>
-
-          {cartItems.length === 0 ? (
-            <p>Your cart is empty.</p>
-          ) : (
-            <>
-              <ul className="cart-list">
-                {cartItems.map((item) => (
-                  <CartItem
-                    key={item.cartId}
-                    item={item}
-                    onRemoveFromCart={removeFromCart}
-                  />
-                ))}
-              </ul>
-              <p className="cart-total">Total: ${cartTotal.toFixed(2)}</p>
-            </>
-          )}
-        </section>
-
-        <section className="about-section" id="about">
-          <p>More than a drink</p>
-          <h2>A ritual meant to be shared</h2>
-          <span>
-            Mate brings people together. Our mission is to make this tradition
-            accessible through quality products, thoughtful design, and respect
-            for its South American roots.
-          </span>
-        </section>
-      </main>
-
-      <Footer
-        storeName="Tomate un Mate"
-        email="hello@tomateunmate.com"
-        year={2026}
-      />
-    </div>
+      </div>
+    </BrowserRouter>
   );
 }
 

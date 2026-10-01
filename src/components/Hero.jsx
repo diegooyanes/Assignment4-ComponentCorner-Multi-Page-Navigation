@@ -1,4 +1,5 @@
 import "./Hero.css";
+import { Link } from "react-router-dom";
 
 function Hero({ title, subtitle, ctaText }) {
   return (
@@ -14,9 +15,9 @@ function Hero({ title, subtitle, ctaText }) {
           {subtitle}
         </p>
 
-        <a className="hero__button" href="#products">
+        <Link className="hero__button" to="/products">
           {ctaText}
-        </a>
+        </Link>
       </div>
     </section>
   );

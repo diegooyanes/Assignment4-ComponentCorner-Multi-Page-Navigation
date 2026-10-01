@@ -88,3 +88,11 @@
     width: 100%;
   }
 }
+
+.product-card__details {
+  align-self: flex-start;
+  margin-bottom: 20px;
+  color: #b66a43;
+  font-weight: 700;
+  text-decoration: underline;
+}

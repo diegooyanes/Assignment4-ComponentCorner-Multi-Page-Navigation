@@ -1,4 +1,5 @@
 import "./ProductCard.css";
+import { Link } from "react-router-dom";
 
 function ProductCard({ product, name, price, image, description, onAddToCart }) {
   return (
@@ -17,6 +18,10 @@ function ProductCard({ product, name, price, image, description, onAddToCart }) 
         <p className="product-card__description">
           {description}
         </p>
+
+        <Link className="product-card__details" to={`/products/${product.id}`}>
+          View details →
+        </Link>
 
         <div className="product-card__footer">
           <span className="product-card__price">
